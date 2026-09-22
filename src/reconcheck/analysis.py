@@ -144,7 +144,7 @@ def _reconstruction_outputs(
             [],
             {"sparse_cloud": None, "sparse_quality": None, "dense_cloud": None, "mesh": None},
         )
-    reconstruction = pycolmap.Reconstruction(project.sparse_model)
+    reconstruction = pycolmap.Reconstruction(project.sparse_model)  # type: ignore[attr-defined]
     reconstruction.update_point_3d_errors()
     reconstruction.export_PLY(cache / "sparse.ply")
     points = list(reconstruction.points3D.values())

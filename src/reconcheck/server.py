@@ -148,7 +148,9 @@ def create_app(cache: Path) -> FastAPI:
         source = next((item for item in images if str(item["id"]) == image_id), None)
         if source is None:
             raise HTTPException(404, "image not found")
-        reconstruction = pycolmap.Reconstruction(Path(str(sparse_model)))
+        reconstruction = pycolmap.Reconstruction(  # type: ignore[attr-defined]
+            Path(str(sparse_model))
+        )
         name = str(source["name"])
         target = next(
             (
