@@ -47,6 +47,28 @@ reconcheck analyze /data/project \
 
 Paths may be absolute or relative to the project directory.
 
+## Visual inspection and debugging
+
+### Reconstruction overview
+
+![ReconCheck reconstruction overview showing diagnostics, source images, mesh, sparse cloud, and registered cameras](docs/assets/viewer-overview.png)
+
+Inspect registration, reprojection error, track support, viewing angles, source images, camera trajectories, sparse points, dense points, and meshes in one workspace. Diagnostic cards expand to show distributions rather than only aggregate scores.
+
+### Quality controls
+
+![ReconCheck layer controls showing reprojection-error coloring and geometry controls](docs/assets/quality-controls.png)
+
+Toggle reconstruction layers and color the sparse cloud by original RGB, track support, maximum view angle, or reprojection error. Point size and opacity controls make weakly supported or high-error regions easier to locate spatially.
+
+### Camera diagnostics
+
+![ReconCheck camera diagnostic showing sparse observations and reprojection residuals over a source image](docs/assets/camera-diagnostics.png)
+
+Open any registered camera to compare observed keypoints with their reprojections. Points and residual vectors are colored by error band, helping identify local alignment problems, weak image regions, and outlier observations.
+
+The screenshots show the **Barn** training scene from [Tanks and Temples](https://www.tanksandtemples.org/). Refer to the dataset's [license terms](https://www.tanksandtemples.org/license/) for source-data usage conditions.
+
 ## Image-only datasets
 
 An image directory without a COLMAP sparse model receives a partial report covering image health. The report clearly states that registration, reprojection, track support, viewing geometry, and geometric accuracy could not be evaluated.
