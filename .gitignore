@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Local datasets and generated reconstruction outputs
+raw/
+runs/
+scene-packages/
+*-quality-report-*.json
+*-baseline-*.json
+
+# Local review artifacts
+results.png

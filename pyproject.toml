@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reconcheck"
+version = "0.1.0"
+description = "Local photogrammetry dataset quality auditor and COLMAP reconstruction visualizer"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Gre3nLioN" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Environment :: Web Environment",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = [
+    "fastapi>=0.115",
+    "numpy>=1.26",
+    "pillow>=10",
+    "platformdirs>=4",
+    "pycolmap>=3.11",
+    "uvicorn[standard]>=0.30",
+]
+
+[project.urls]
+Homepage = "https://github.com/Gre3nLioN/reconcheck"
+Issues = "https://github.com/Gre3nLioN/reconcheck/issues"
+
+[project.scripts]
+reconcheck = "reconcheck.cli:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15",
+    "pytest>=8",
+    "ruff>=0.11",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/README.md",
+    "/LICENSE",
+    "/CHANGELOG.md",
+    "/pyproject.toml",
+    "/uv.lock",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reconcheck"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
