@@ -150,8 +150,8 @@ def prepare_webodm(root: Path, output: Path, *, maximum_points: int = 2_000_000)
         },
         "assets": {
             "sparse_cloud": None,
-            "dense_cloud": f"{dense}",
-            "mesh": f"{mesh}",
+            "dense_cloud": "/api/assets/dense-cloud.ply",
+            "mesh": "/api/assets/mesh.ply",
             "sparse_quality": None,
         },
         "cameras": cameras,
