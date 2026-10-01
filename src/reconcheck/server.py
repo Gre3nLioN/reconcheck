@@ -39,11 +39,15 @@ def create_app(cache: Path) -> FastAPI:
     @app.get("/api/dataset")
     def dataset() -> dict[str, object]:
         scene = _json(cache / "manifest.json")
+        scene_capabilities = scene.get("capabilities", {})
         capabilities = {
-            "images": "available",
-            "camera_poses": f"available: {scene['stats']['registered_images']}"
-            if project["sparse_model"]
-            else "unavailable",
+            "images": scene_capabilities.get("images", "available"),
+            "camera_poses": scene_capabilities.get(
+                "camera_poses",
+                f"available: {scene['stats']['registered_images']}"
+                if project["sparse_model"]
+                else "unavailable",
+            ),
             "sparse_points": f"available: {scene['stats']['sparse_points']}"
             if project["sparse_model"]
             else "unavailable",

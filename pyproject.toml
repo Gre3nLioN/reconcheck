@@ -23,6 +23,8 @@ classifiers = [
 ]
 dependencies = [
     "fastapi>=0.115",
+    "lazrs>=0.6",
+    "laspy>=2.5",
     "numpy>=1.26",
     "pillow>=10",
     "platformdirs>=4",

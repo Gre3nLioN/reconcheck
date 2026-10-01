@@ -11,6 +11,7 @@ import uvicorn
 from reconcheck.analysis import analyze_project
 from reconcheck.project import ProjectError, discover_project
 from reconcheck.server import create_app
+from reconcheck.webodm import prepare_webodm
 
 
 def parser() -> argparse.ArgumentParser:
@@ -20,6 +21,17 @@ def parser() -> argparse.ArgumentParser:
     )
     root.add_argument("--version", action="version", version="ReconCheck 0.1.0")
     commands = root.add_subparsers(dest="command", required=True)
+    webodm = commands.add_parser(
+        "webodm", help="Load an existing WebODM export as a mesh-only scene"
+    )
+    webodm.add_argument("path", type=Path, help="WebODM export directory")
+    webodm.add_argument(
+        "--output", type=Path, required=True, help="Derived adapter output directory"
+    )
+    webodm.add_argument("--max-points", type=int, default=2_000_000)
+    webodm.add_argument("--no-browser", action="store_true")
+    webodm.add_argument("--host", default="127.0.0.1")
+    webodm.add_argument("--port", type=int, default=8000)
     analyze = commands.add_parser("analyze", help="Analyze a dataset and open its local viewer")
     analyze.add_argument("path", type=Path, help="Dataset or COLMAP project directory")
     analyze.add_argument(
@@ -42,9 +54,22 @@ def parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     arguments = parser().parse_args(argv)
-    if arguments.command != "analyze":
-        return 2
     try:
+        if arguments.command == "webodm":
+            cache = prepare_webodm(
+                arguments.path, arguments.output, maximum_points=arguments.max_points
+            )
+            app = create_app(cache)
+            url_host = "127.0.0.1" if arguments.host in {"0.0.0.0", "::"} else arguments.host
+            url = f"http://{url_host}:{arguments.port}"
+            print(f"WebODM scene ready: {url}")
+            print(f"Derived assets: {cache}")
+            if not arguments.no_browser:
+                Timer(0.8, lambda: webbrowser.open(url)).start()
+            uvicorn.run(app, host=arguments.host, port=arguments.port, log_level="info")
+            return 0
+        if arguments.command != "analyze":
+            return 2
         project = discover_project(
             arguments.path,
             images=arguments.images,
