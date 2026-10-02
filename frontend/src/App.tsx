@@ -112,15 +112,23 @@ function SceneGeometry({ scene, showSparse, showDense, showMesh, showCameras, sh
 function ViewController({ command, selectedCamera, cameras, origin, onUserMove }: { command: string; selectedCamera: number | null; cameras: Camera[]; origin: THREE.Vector3; onUserMove: () => void }): ReactElement {
   const { camera } = useThree()
   const controls = useRef<any>(null)
+  // Geometry is translated by `origin` to keep its bounds near the world origin.
+  // OrbitControls always moves the camera; this target must remain the stationary
+  // center of the translated scene rather than a point in the source coordinates.
+  const target = useMemo(() => new THREE.Vector3(), [origin])
   useEffect(() => {
-    const target = new THREE.Vector3(0, 0, 0)
+    if (!controls.current) return
+    controls.current.target.copy(target)
+    controls.current.update()
+  }, [target])
+  useEffect(() => {
     if (command.startsWith('front')) camera.position.set(0, 1, 7)
     if (command.startsWith('top')) camera.position.set(0, 7, 0.01)
     if (command.startsWith('side')) camera.position.set(7, 1, 0)
     if (command.startsWith('reset')) camera.position.set(4, 3, 5)
     if (command.startsWith('fit')) camera.position.set(8, 6, 10)
     if (controls.current) { controls.current.target.copy(target); controls.current.update() }
-  }, [camera, command])
+  }, [camera, command, target])
   useEffect(() => {
     if (selectedCamera === null) return
     const selected = cameras.find(item => item.id === selectedCamera)
